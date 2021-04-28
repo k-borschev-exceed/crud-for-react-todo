@@ -1,5 +1,4 @@
 const express = require('express');
-const bodyParser = require('body-parser');
 const task = require('./routes/task.route');
 const app = express();
 
@@ -11,11 +10,11 @@ mongoose.Promise = global.Promise;
 let db = mongoose.connection;
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({extended: false}));
+app.use(express.json());
+app.use(express.urlencoded({extended: false}));
 
 app.use('/tasks', task);
-let port = 3001;
+const port = 3001;
 app.listen(port, () => {
     console.log('Server is up and running on port number ' + port);
 });
