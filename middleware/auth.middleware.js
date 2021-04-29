@@ -3,27 +3,33 @@ const User = require('../models/user.model');
 
 const requireAuth = (req, res, next) => {
   const token = req.cookies.jwt;
-
-  // check json web token exists & is verified
+  console.log('step first')
   if (token) {
+    console.log('step second')
+
     jwt.verify(token, 'secrettest', (err, decodedToken) => {
+      console.log('step third')
+
       if (err) {
         console.log(err.message);
-        res.send(false)
-      } else {
-        res.send(true)
+        console.log('error step')
 
-        console.log(decodedToken);
+        //res.status(400).send(false)
+      } else {
+        //res.send(true)
+        console.log('step fourth')
+
+        //console.log(decodedToken);
         next();
       }
     });
   } else {
-    res.send(false)
+    console.log('else step')
+    //res.status(400).send(false)
   }
 };
 
 const checkUser = (req, res, next) => {
-  console.log('dododo')
   const token = req.cookies.jwt;
   if (token) {
     jwt.verify(token, 'secrettest', async (err, decodedToken) => {
@@ -37,7 +43,7 @@ const checkUser = (req, res, next) => {
       }
     });
   } else {
-    res.send(err);
+    res.send(JSON.stringify({ text : 'user doesnt exist'}));
     next();
   }
 };
