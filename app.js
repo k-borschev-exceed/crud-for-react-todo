@@ -1,8 +1,7 @@
 const express = require('express');
 const task = require('./routes/task.route');
 const auth = require('./routes/auth.route');
-const {checkUser, requireAuth} = require('./middleware/auth.middleware.js');
-const cookieParser = require('cookie-parser');
+const {requireAuth} = require('./middleware/auth.middleware.js');
 
 const app = express();
 
@@ -16,12 +15,10 @@ db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 
 app.use(express.json());
 app.use(express.urlencoded({extended: false}));
-app.use(cookieParser());
 
+
+app.use('/tasks', requireAuth)
 app.use('/tasks',task);
-app.get('/checkAuth', requireAuth)
-app.get('/checkUser', checkUser)
-
 app.use('/', auth);
 
 

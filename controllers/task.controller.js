@@ -10,6 +10,7 @@ exports.task_create = function (req, res) {
     let task = new Task({
       title: req.body.title,
       isCompleted: req.body.isCompleted,
+      author: req.body.author
     });
     task
       .save()
@@ -21,13 +22,16 @@ exports.task_create = function (req, res) {
 };
 
 exports.task_read = function (req, res) {
-  Task.find({}, function (err, tasks) {
-    if (err) res.status(500).send('Internal server error');
-
+  Task.find({author: req.headers.author}, function (err, tasks) {
+    if (err) {
+      res.status(500).send('Internal server error');
+    } 
+    else {
     tasks = tasks.map((e) => {
       return { title: e.title, isCompleted: e.isCompleted, id: e._id };
     });
     res.send(tasks);
+  }
   });
 };
 
@@ -62,9 +66,10 @@ exports.task_update = function (req, res) {
 };
 
 exports.task_delete = function (req, res) {
+  const { userId } = req.body;
   if (req.body) {
     req.body.forEach((item) => {
-      Task.findByIdAndDelete(item.id).catch(() =>
+      Task.findByIdAndDelete(item.id).catch(() => //добавить проверку юзер id
         res.status(500).send('Internal server error')
       );
     });
