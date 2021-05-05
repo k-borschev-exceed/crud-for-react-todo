@@ -22,7 +22,7 @@ app.use('/tasks',task);
 app.use('/', auth);
 
 
-const port = 3001;
+const port = process.env.PORT || 3001;
 app.listen(port, () => {
     console.log('Server is up and running on port number ' + port);
 });
