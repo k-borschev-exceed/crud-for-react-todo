@@ -1,0 +1,64 @@
+button.footerBtn {
+    width: 120px;
+    background-color: white;
+    color: rgb(130, 129, 129);
+    font-size: 14px;
+    margin-top: 1px;
+    margin-bottom: 0px;
+  }
+  
+  button.logout {
+    width: 50px;
+    background-color: rgb(184, 59, 59);
+    color: white;
+    font-weight: 900;
+  }
+  
+  button.hidden {
+    visibility: hidden;
+  }
+  
+  p.itemsLeft {
+    width: auto;
+    color: rgb(130, 129, 129);
+    font-size: 14px;
+    margin-top: 8px;
+    margin-left: 10px;
+  }
+  
+  ul.menu {
+    width: 40%;
+    display: flex;
+    margin: auto;
+    align-items: center;
+    height: 42px;
+    color: rgb(130, 129, 129);
+  }
+  
+  li.menuElement {
+    margin: auto;
+    margin-top: 0px;
+    margin-bottom: 4px;
+    font-size: 14px;
+    height: 20px;
+    padding: 0 5px;
+    padding-bottom: 2px;
+    border: none;
+  }
+  
+  li.active {
+    border: 1px solid rgb(206, 203, 203);
+    border-radius: 3px;
+  }
+  
+  div#footer {
+    display: flex;
+    width: 100%;
+    background-color: white;
+    margin: auto;
+    border: none;
+    box-shadow: 0px 1px rgb(0 0 0 / 20%), 0 8px 0 -3px #f6f6f6,
+      0 9px 1px -3px rgb(0 0 0 / 20%), 0 16px 0 -6px #f6f6f6,
+      0 17px 2px -6px rgb(0 0 0 / 20%);
+  }
+  
