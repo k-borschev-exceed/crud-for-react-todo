@@ -1,4 +1,4 @@
-const User = require("../models/user.model");
+const User = require('../models/user.model');
 const jwt = require('jsonwebtoken');
 
 // handle errors
@@ -30,13 +30,13 @@ const handleErrors = (err) => {
   }
 
   return errors;
-}
+};
 
 // create json web token
 const maxAge = 3 * 24 * 60 * 60;
-const createToken = (id) => {
-  return jwt.sign({ id }, 'secrettest', {
-    expiresIn: maxAge
+const createToken = (id, email) => {
+  return jwt.sign({ id, email }, 'secrettest', {
+    expiresIn: maxAge,
   });
 };
 
@@ -45,44 +45,36 @@ module.exports.signup_post = async (req, res) => {
 
   try {
     const user = await User.create({ email, password });
-    const token = createToken(user._id);
+    const token = createToken(user._id, user.email);
+
     res.status(200).send({ userId: user._id, email: user.email, token });
-  }
-  catch(err) {
+  } catch (err) {
     const errors = handleErrors(err);
     res.status(400).send({ errors });
   }
- 
-}
+};
 
 module.exports.login_post = async (req, res) => {
   const { email, password } = req.body;
 
   try {
     const user = await User.login(email, password);
-    const token = createToken(user._id);
-    console.log(user)
-    res.status(200).send({ userId: user._id, email: user.email, token });
-  } 
-  catch (err) {
+    const token = createToken(user._id, user.email);
+
+    res.status(200).send({ token });
+  } catch (err) {
     const errors = handleErrors(err);
     res.status(400).send({ errors });
   }
-}
+};
 
 module.exports.verify_token = (req, res) => {
-  const {id, token} = req.body;
+  const { token } = req.body;
   try {
-    jwt.verify(token, 'secrettest', (err, decodedToken) => {
-      if (!err && decodedToken.id === id) {
-        res.status(200).send({status: true})
-
-      } else {
-        res.status(400).send({status: false})
-      }
+    jwt.verify(token, 'secrettest', () => {
+      res.status(200).send({ status: true });
     });
+  } catch (err) {
+    res.status(400).send({ status: false });
   }
-  catch (err) {
-    res.status(400).send({status: false})
-  }
-}
+};
