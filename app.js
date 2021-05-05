@@ -17,11 +17,9 @@ db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 app.use(express.json());
 app.use(express.urlencoded({extended: false}));
 app.use(express.static('client/build'));
+app.use('/', express.static(__dirname + '/'));
 
-// Express serve up index.html file if it doesn't recognize route
-app.get('*', (req, res) => {
-  res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'));
-});
+
 
 
 
@@ -31,7 +29,10 @@ app.use('/', auth);
 
 
 
-
+// Express serve up index.html file if it doesn't recognize route
+app.get('*', (req, res) => {
+    res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'));
+  });
 
 const port = process.env.PORT || 3001;
 app.listen(port, () => {
