@@ -1,4 +1,5 @@
 const express = require('express');
+const path = require('path');
 const task = require('./routes/task.route');
 const auth = require('./routes/auth.route');
 const {requireAuth} = require('./middleware/auth.middleware.js');
@@ -15,11 +16,21 @@ db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 
 app.use(express.json());
 app.use(express.urlencoded({extended: false}));
+app.use(express.static('client/build'));
+
+// Express serve up index.html file if it doesn't recognize route
+app.get('*', (req, res) => {
+  res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'));
+});
+
 
 
 app.use('/tasks', requireAuth)
 app.use('/tasks',task);
 app.use('/', auth);
+
+
+
 
 
 const port = process.env.PORT || 3001;
