@@ -33,6 +33,7 @@ div.signup h2 {
     border: 1px solid rgb(206, 203, 203);
     border-radius: 3px;
     width: 100%;
+    cursor: pointer;
   }
   div.signup .error {
     color: #ff0099;
@@ -56,5 +57,6 @@ div.signup h2 {
   
   p.link {
     text-decoration: underline;
+    cursor: pointer;
   }
   

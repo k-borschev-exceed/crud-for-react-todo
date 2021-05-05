@@ -39,6 +39,8 @@ li.taskElement {
     -webkit-appearance: none;
     margin: auto;
     margin-left: 5px;
+    cursor: pointer;
+
   }
   
   input.checkbox:checked::after {
@@ -72,5 +74,7 @@ li.taskElement {
     background-color: white;
     color: rgb(169, 38, 38);
     font-weight: 100;
+    cursor: pointer;
+
   }
   

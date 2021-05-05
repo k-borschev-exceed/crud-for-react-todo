@@ -5,6 +5,8 @@ button.footerBtn {
     font-size: 14px;
     margin-top: 1px;
     margin-bottom: 0px;
+    cursor: pointer;
+
   }
   
   button.logout {
@@ -44,6 +46,8 @@ button.footerBtn {
     padding: 0 5px;
     padding-bottom: 2px;
     border: none;
+    cursor: pointer;
+
   }
   
   li.active {

@@ -44,6 +44,7 @@ button#completeAllBtn {
   background-image: url('./complete_all.png');
   background-size: 45px 45px;
   opacity: 0.2;
+  cursor: pointer;
 }
 
 button#completeAllBtn.completed {

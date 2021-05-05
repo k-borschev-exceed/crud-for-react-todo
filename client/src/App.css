@@ -33,4 +33,5 @@ span.logout {
   font-size: larger;
   float: right;
   margin-right: 15px;
+  cursor: pointer;
 }
