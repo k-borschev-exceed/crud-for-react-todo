@@ -199,6 +199,9 @@ export default class App extends React.Component {
   showCompleted = () => this.setState({ showCondition: 'completed' });
 
   render() {
+    if (localStorage['auth'] && !this.state.isLoggedin) {
+      return ( <></> )
+    }
     return (
       <div className='App'>
         <h1>todos</h1>

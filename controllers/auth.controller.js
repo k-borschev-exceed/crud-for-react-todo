@@ -47,7 +47,7 @@ module.exports.signup_post = async (req, res) => {
     const user = await User.create({ email, password });
     const token = createToken(user._id, user.email);
 
-    res.status(200).send({ userId: user._id, email: user.email, token });
+    res.status(200).send({message: "Account created"});
   } catch (err) {
     const errors = handleErrors(err);
     res.status(400).send({ errors });
