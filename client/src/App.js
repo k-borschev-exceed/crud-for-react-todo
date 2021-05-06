@@ -27,7 +27,6 @@ class App extends React.Component {
         headers: { 'Content-Type': 'application/json' },
       });
       const data = await res.json();
-      console.log(data);
       this.props.setLoginCondition(data.status);
     } else {
       this.props.setLoginCondition(false);

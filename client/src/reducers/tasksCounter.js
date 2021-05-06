@@ -7,7 +7,6 @@ export const initialState = {
 export function tasksCounterReducer(state = initialState, action) {
   switch (action.type) {
     case 'UPDATE_COUNTER':
-      console.log('updfate tasks asdsadad');
       return {
         all: action.payload.all,
         completed: action.payload.completed,
