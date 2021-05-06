@@ -5,27 +5,21 @@ import List from './components/List';
 import Footer from './components/Footer';
 import Login from './components/Login';
 import Signup from './components/Signup';
+import { connect } from 'react-redux';
 const jwt = require('jsonwebtoken');
-//title only create
-//все кроме токена в локалсторадж
-//после сайгнапа кидать на логин
-export default class App extends React.Component {
-  state = {
-    tasks: [],
-    showCondition: 'all',
-    tasksCounter: { all: 0, completed: 0, active: 0 },
-    isLoggedin: false,
-    logOrSignUp: 'login',
-  };
 
+class App extends React.Component {
   componentDidMount = async () => {
     await this.checkAuth();
   };
 
+  showActive = () => this.props.showActive();
+  showAll = () => this.props.showAll();
+  showCompleted = () => this.props.showCompleted();
+
   checkAuth = async () => {
     if (localStorage['auth']) {
       const token = JSON.parse(localStorage['auth']);
-      //const id = JSON.parse(localStorage['auth']).userId;
 
       const res = await fetch('/verifyToken', {
         method: 'POST',
@@ -33,12 +27,12 @@ export default class App extends React.Component {
         headers: { 'Content-Type': 'application/json' },
       });
       const data = await res.json();
-
-      this.setState({ isLoggedin: data.status });
+      console.log(data);
+      this.props.setLoginCondition(data.status);
     } else {
-      this.setState({ isLoggedin: false });
+      this.props.setLoginCondition(false);
     }
-    if (this.state.isLoggedin) {
+    if (this.props.isLoggedIn) {
       await this.fetchTasks();
     }
   };
@@ -52,17 +46,19 @@ export default class App extends React.Component {
     })
       .then((res) => res.json())
       .then(async (tasks) => {
-        await this.setState({ tasks });
+        //await this.setState({ tasks });
+        await this.props.updateTasks(tasks);
         this.stateTasksCounter();
       });
   };
 
-  setSignup = () => this.setState({ logOrSignUp: 'signup' });
+  setSignup = () => this.props.setLogOrSignUp('signup');
 
-  setLogin = () => this.setState({ logOrSignUp: 'login' });
+  setLogin = () => this.props.setLogOrSignUp('login');
 
   logout = async () => {
-    await this.setState({ tasks: [] });
+    //await this.setState({ tasks: [] });
+    await this.props.clearTasks();
     await localStorage.removeItem('auth');
     await this.checkAuth();
   };
@@ -85,24 +81,22 @@ export default class App extends React.Component {
   };
 
   findIndexById = (id) => {
-    for (let i = 0; i < this.state.tasks.length; i++) {
-      if (id === this.state.tasks[i].id) return i;
+    for (let i = 0; i < this.props.tasks.length; i++) {
+      if (id === this.props.tasks[i].id) return i;
     }
   };
 
   stateTasksCounter = () => {
-    this.setState({
-      tasksCounter: {
-        all: this.state.tasks.length,
-        completed: this.state.tasks.reduce(
-          (sum, current) => sum + current.isCompleted,
-          0
-        ),
-        active: this.state.tasks.reduce(
-          (sum, current) => sum + !current.isCompleted,
-          0
-        ),
-      },
+    this.props.updateCounter({
+      all: this.props.tasks.length,
+      completed: this.props.tasks.reduce(
+        (sum, current) => sum + current.isCompleted,
+        0
+      ),
+      active: this.props.tasks.reduce(
+        (sum, current) => sum + !current.isCompleted,
+        0
+      ),
     });
   };
 
@@ -147,7 +141,7 @@ export default class App extends React.Component {
   };
 
   completeAll = async () => {
-    let tempItems = [...this.state.tasks];
+    let tempItems = [...this.props.tasks];
     tempItems[0].setComplete = false;
     tempItems.forEach((item) => {
       if (!item.isCompleted) tempItems[0].setComplete = true;
@@ -173,7 +167,7 @@ export default class App extends React.Component {
   };
 
   clearCompleted = async () => {
-    let tempItems = this.state.tasks.filter((e) => !e.isCompleted);
+    let tempItems = this.props.tasks.filter((e) => !e.isCompleted);
 
     fetch('/tasks/', {
       headers: {
@@ -183,7 +177,7 @@ export default class App extends React.Component {
       },
       method: 'DELETE',
       body: JSON.stringify(
-        this.state.tasks
+        this.props.tasks
           .filter((x) => tempItems.indexOf(x) === -1)
           .map((item) => item.id)
       ),
@@ -192,20 +186,14 @@ export default class App extends React.Component {
     this.stateTasksCounter();
   };
 
-  showActive = () => this.setState({ showCondition: 'uncompleted' });
-
-  showAll = () => this.setState({ showCondition: 'all' });
-
-  showCompleted = () => this.setState({ showCondition: 'completed' });
-
   render() {
-    if (localStorage['auth'] && !this.state.isLoggedin) {
-      return ( <></> )
+    if (localStorage['auth'] && !this.props.isLoggedIn) {
+      return <></>;
     }
     return (
       <div className='App'>
         <h1>todos</h1>
-        {this.state.isLoggedin && (
+        {this.props.isLoggedIn && (
           <>
             <p className='username'>
               Logged as {jwt.decode(JSON.parse(localStorage['auth'])).email}{' '}
@@ -218,18 +206,18 @@ export default class App extends React.Component {
               addTask={this.addTask}
               completeAll={this.completeAll}
               isAllCompleted={
-                this.state.tasksCounter.all ===
-                this.state.tasksCounter.completed
+                this.props.tasksCounter.all ===
+                this.props.tasksCounter.completed
               }
-              isNotEmpty={this.state.tasksCounter.all}
+              isNotEmpty={this.props.tasksCounter.all}
             />
 
-            {!!this.state.tasks.length && (
+            {!!this.props.tasks.length && (
               <>
                 <List
-                  tasks={this.state.tasks}
+                  tasks={this.props.tasks}
                   changeCompleteness={this.changeCompleteness}
-                  showCondition={this.state.showCondition}
+                  showCondition={this.props.visibility}
                   deleteTask={this.deleteTask}
                   taskElemHandler={this.taskElemHandler}
                   changeTask={this.changeTask}
@@ -239,21 +227,49 @@ export default class App extends React.Component {
                   showActive={this.showActive}
                   showAll={this.showAll}
                   showCompleted={this.showCompleted}
-                  showCondition={this.state.showCondition}
-                  tasksCounter={this.state.tasksCounter}
+                  showCondition={this.props.visibility}
+                  tasksCounter={this.props.tasksCounter}
                   logout={this.logout}
                 />
               </>
             )}
           </>
         )}
-        {!this.state.isLoggedin && this.state.logOrSignUp === 'login' && (
+        {!this.props.isLoggedIn && this.props.logOrSignUp === 'login' && (
           <Login checkAuth={this.checkAuth} setSignup={this.setSignup} />
         )}
-        {!this.state.isLoggedin && this.state.logOrSignUp === 'signup' && (
+        {!this.props.isLoggedIn && this.props.logOrSignUp === 'signup' && (
           <Signup checkAuth={this.checkAuth} setLogin={this.setLogin} />
         )}
       </div>
     );
   }
 }
+
+const mapStateToProps = (store) => {
+  return {
+    visibility: store.visibility,
+    isLoggedIn: store.isLoggedIn,
+    tasksCounter: store.tasksCounter,
+    tasks: store.tasks,
+    logOrSignUp: store.logOrSignUp,
+  };
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    showActive: () => dispatch({ type: 'SHOW_ACTIVE' }),
+    showAll: () => dispatch({ type: 'SHOW_ALL' }),
+    showCompleted: () => dispatch({ type: 'SHOW_COMPLETED' }),
+    setLoginCondition: (condition) =>
+      dispatch({ type: 'SET_LOGIN_CONDITION', payload: condition }),
+    updateCounter: (tasksCounter) =>
+      dispatch({ type: 'UPDATE_COUNTER', payload: tasksCounter }),
+    updateTasks: (tasks) => dispatch({ type: 'UPDATE_TASKS', payload: tasks }),
+    clearTasks: () => dispatch({ type: 'CLEAR_TASKS' }),
+    setLogOrSignUp: (condition) =>
+      dispatch({ type: 'SET_LOGORSIGNUP_CONDITION', payload: condition }),
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);
