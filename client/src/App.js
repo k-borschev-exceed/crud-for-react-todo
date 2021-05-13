@@ -45,7 +45,6 @@ class App extends React.Component {
     })
       .then((res) => res.json())
       .then(async (tasks) => {
-        //await this.setState({ tasks });
         await this.props.updateTasks(tasks);
         this.stateTasksCounter();
       });
@@ -56,7 +55,6 @@ class App extends React.Component {
   setLogin = () => this.props.setLogOrSignUp('login');
 
   logout = async () => {
-    //await this.setState({ tasks: [] });
     await this.props.clearTasks();
     await localStorage.removeItem('auth');
     await this.checkAuth();
@@ -257,17 +255,17 @@ const mapStateToProps = (store) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    showActive: () => dispatch({ type: 'SHOW_ACTIVE' }),
-    showAll: () => dispatch({ type: 'SHOW_ALL' }),
-    showCompleted: () => dispatch({ type: 'SHOW_COMPLETED' }),
+    showActive: () => dispatch({ type: 'filters/visibilityActiveShowed' }),
+    showAll: () => dispatch({ type: 'filters/visibilityAllShowed' }),
+    showCompleted: () => dispatch({ type: 'filters/visibilityCompletedShowed' }),
     setLoginCondition: (condition) =>
-      dispatch({ type: 'SET_LOGIN_CONDITION', payload: condition }),
+      dispatch({ type: 'filters/loggedInStatusChanged', payload: condition }),
     updateCounter: (tasksCounter) =>
-      dispatch({ type: 'UPDATE_COUNTER', payload: tasksCounter }),
-    updateTasks: (tasks) => dispatch({ type: 'UPDATE_TASKS', payload: tasks }),
-    clearTasks: () => dispatch({ type: 'CLEAR_TASKS' }),
+      dispatch({ type: 'tasks/tasksCounterUpdated', payload: tasksCounter }),
+    updateTasks: (tasks) => dispatch({ type: 'tasks/tasksUpdated', payload: tasks }),
+    clearTasks: () => dispatch({ type: 'tasks/tasksCleared' }),
     setLogOrSignUp: (condition) =>
-      dispatch({ type: 'SET_LOGORSIGNUP_CONDITION', payload: condition }),
+      dispatch({ type: 'filters/loginOrSignupStatusChanged', payload: condition }),
   };
 };
 

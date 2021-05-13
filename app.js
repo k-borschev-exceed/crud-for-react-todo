@@ -19,10 +19,6 @@ app.use(express.urlencoded({extended: false}));
 app.use(express.static('client/build'));
 app.use('/', express.static(__dirname + '/'));
 
-
-
-
-
 app.use('/tasks', requireAuth)
 app.use('/tasks',task);
 app.use('/', auth);
