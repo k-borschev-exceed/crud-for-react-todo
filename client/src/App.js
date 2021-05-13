@@ -245,11 +245,11 @@ class App extends React.Component {
 
 const mapStateToProps = (store) => {
   return {
-    visibility: store.visibility,
-    isLoggedIn: store.isLoggedIn,
-    tasksCounter: store.tasksCounter,
     tasks: store.tasks,
-    logOrSignUp: store.logOrSignUp,
+    visibility: store.filters.visibility,
+    isLoggedIn: store.filters.isLoggedIn,
+    tasksCounter: store.filters.tasksCounter,
+    logOrSignUp: store.filters.logOrSignUp,
   };
 };
 
@@ -261,7 +261,7 @@ const mapDispatchToProps = (dispatch) => {
     setLoginCondition: (condition) =>
       dispatch({ type: 'filters/loggedInStatusChanged', payload: condition }),
     updateCounter: (tasksCounter) =>
-      dispatch({ type: 'tasks/tasksCounterUpdated', payload: tasksCounter }),
+      dispatch({ type: 'filters/tasksCounterUpdated', payload: tasksCounter }),
     updateTasks: (tasks) => dispatch({ type: 'tasks/tasksUpdated', payload: tasks }),
     clearTasks: () => dispatch({ type: 'tasks/tasksCleared' }),
     setLogOrSignUp: (condition) =>
