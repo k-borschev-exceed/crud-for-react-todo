@@ -247,25 +247,27 @@ const mapStateToProps = (store) => {
   return {
     tasks: store.tasks,
     visibility: store.filters.visibility,
-    isLoggedIn: store.filters.isLoggedIn,
+    isLoggedIn: store.login.isLoggedIn,
     tasksCounter: store.filters.tasksCounter,
-    logOrSignUp: store.filters.logOrSignUp,
+    logOrSignUp: store.login.logOrSignUp,
   };
 };
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    showActive: () => dispatch({ type: 'filters/visibilityActiveShowed' }),
-    showAll: () => dispatch({ type: 'filters/visibilityAllShowed' }),
-    showCompleted: () => dispatch({ type: 'filters/visibilityCompletedShowed' }),
-    setLoginCondition: (condition) =>
-      dispatch({ type: 'filters/loggedInStatusChanged', payload: condition }),
+    showActive: () => dispatch({ type: 'filters/visibilityStatusChanged', payload: 'uncompleted' }),
+    showAll: () => dispatch({ type: 'filters/visibilityStatusChanged', payload: 'all' }),
+    showCompleted: () => dispatch({ type: 'filters/visibilityStatusChanged', payload: 'completed' }),
     updateCounter: (tasksCounter) =>
-      dispatch({ type: 'filters/tasksCounterUpdated', payload: tasksCounter }),
+    dispatch({ type: 'filters/tasksCounterUpdated', payload: tasksCounter }),
+
     updateTasks: (tasks) => dispatch({ type: 'tasks/tasksUpdated', payload: tasks }),
     clearTasks: () => dispatch({ type: 'tasks/tasksCleared' }),
+
+    setLoginCondition: (condition) =>
+    dispatch({ type: 'login/loggedInStatusChanged', payload: condition }),
     setLogOrSignUp: (condition) =>
-      dispatch({ type: 'filters/loginOrSignupStatusChanged', payload: condition }),
+      dispatch({ type: 'login/loginOrSignupStatusChanged', payload: condition }),
   };
 };
 
