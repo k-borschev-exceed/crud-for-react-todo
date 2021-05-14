@@ -35,7 +35,7 @@ export default function List(props) {
 
   return (
     <>
-      <hr></hr>
+      <hr/>
       <ul>{renderHandler()}</ul>
     </>
   );

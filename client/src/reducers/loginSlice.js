@@ -1,6 +1,7 @@
 const initialState = {
   logOrSignUp: 'login',
   isLoggedIn: false,
+  email : ''
 };
 
 export default function loginReducer(state = initialState, action) {
@@ -17,6 +18,13 @@ export default function loginReducer(state = initialState, action) {
         ...state,
         logOrSignUp: action.payload,
       };
+    }
+
+    case 'login/setEmail' : {
+      return {
+        ...state,
+        email : action.payload
+      }
     }
     default:
       return state;

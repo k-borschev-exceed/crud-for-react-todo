@@ -28,6 +28,7 @@ class App extends React.Component {
       });
       const data = await res.json();
       this.props.setLoginCondition(data.status);
+      this.props.setEmail(jwt.decode(JSON.parse(localStorage['auth'])).email)
     } else {
       this.props.setLoginCondition(false);
     }
@@ -185,7 +186,7 @@ class App extends React.Component {
 
   render() {
     if (localStorage['auth'] && !this.props.isLoggedIn) {
-      return <></>;
+      return null;
     }
     return (
       <div className='App'>
@@ -193,7 +194,7 @@ class App extends React.Component {
         {this.props.isLoggedIn && (
           <>
             <p className='username'>
-              Logged as {jwt.decode(JSON.parse(localStorage['auth'])).email}{' '}
+              Logged as {this.props.email}{' '}
               <span onClick={this.logout} className='logout'>
                 {' '}
                 Logout{' '}
@@ -250,6 +251,7 @@ const mapStateToProps = (store) => {
     isLoggedIn: store.login.isLoggedIn,
     tasksCounter: store.filters.tasksCounter,
     logOrSignUp: store.login.logOrSignUp,
+    email: store.login.email
   };
 };
 
@@ -268,6 +270,8 @@ const mapDispatchToProps = (dispatch) => {
     dispatch({ type: 'login/loggedInStatusChanged', payload: condition }),
     setLogOrSignUp: (condition) =>
       dispatch({ type: 'login/loginOrSignupStatusChanged', payload: condition }),
+    setEmail: (email) =>
+      dispatch({type: 'login/setEmail', payload: email})
   };
 };
 

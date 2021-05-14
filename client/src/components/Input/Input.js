@@ -9,9 +9,7 @@ export default function Input({
 }) {
   const [task, setTask] = useState('');
 
-  const inputHandler = (e) => {
-    setTask(e.currentTarget.value);
-  };
+  const inputHandler = (e) => setTask(e.currentTarget.value);
 
   const onBtnClickHandler = (e) => {
     e.preventDefault();
@@ -26,10 +24,10 @@ export default function Input({
         onClick={completeAll}
         className={
           isAllCompleted && isNotEmpty
-            ? 'completed '
-            : isNotEmpty
-            ? ''
-            : 'empty'
+          ? 'completed '
+          : isNotEmpty
+          ? ''
+          : 'empty'
         }
       >
         &nbsp;

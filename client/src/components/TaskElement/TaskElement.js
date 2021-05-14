@@ -11,21 +11,12 @@ export default function TaskElement({
   const [inputCondition, setInputCondition] = useState(true);
   const [newValue, setNewValue] = useState(title);
 
-  const inputHandler = (e) => setNewValue(e.currentTarget.value);
-
-  const checkboxHandler = () => changeCompleteness(id, !isCompleted);
-
   const submitHandler = (event) => {
-    console.log(event.type === 'blur' || event.key === 'Enter')
     if (event.type === 'blur' || event.key === 'Enter') {
       changeTask(newValue, id);
       setInputCondition(true);
     }
   };
-
-  const deleteTaskF = () => deleteTask(id);
-
-  const changeCondition = () => setInputCondition(false);
 
   return (
     <>
@@ -35,10 +26,10 @@ export default function TaskElement({
             <input
               type='checkbox'
               className='checkbox'
-              onChange={checkboxHandler}
+              onChange={() => changeCompleteness(id, !isCompleted)}
               checked={isCompleted}
             />
-            <div id='inputArea' onDoubleClick={changeCondition}>
+            <div id='inputArea' onDoubleClick={() => setInputCondition(false)}>
               <p
                 className={
                   isCompleted ? 'completed taskvalue' : 'uncompleted taskvalue'
@@ -46,7 +37,7 @@ export default function TaskElement({
               >
                 {title}
               </p>
-              <button className={'delete'} onClick={deleteTaskF}>
+              <button className={'delete'} onClick={() => deleteTask(id)}>
                 ×
               </button>
             </div>
@@ -56,9 +47,9 @@ export default function TaskElement({
             <input
               className='valueChanger'
               value={newValue}
-              onChange={inputHandler}
-              onKeyDown={submitHandler}
-              onBlur={submitHandler}
+              onChange={(e) => setNewValue(e.currentTarget.value)}
+              onKeyDown={(e) => submitHandler(e)}
+              onBlur={(e) => submitHandler(e)}
               type='text'
             />
           </>
